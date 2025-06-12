@@ -10,21 +10,40 @@ load_dotenv()
 # Check if prompt was provided as command line argument
 if len(sys.argv) < 2:
     print("Error: No prompt provided!")
-    print("Usage: python main.py \"Your question here\"")
+    print("Usage: python main.py \"Your question here\" [--verbose]")
     print("Example: python main.py \"What is artificial intelligence?\"")
+    print("Example: python main.py \"What is artificial intelligence?\" --verbose")
     exit(1)
 
 # Get the prompt from command line arguments
 user_prompt = sys.argv[1]
+
+# Check for verbose flag
+verbose = False
+if len(sys.argv) >= 3:
+    if sys.argv[2] == "--verbose":
+        verbose = True
+    else:
+        print(f"Error: Unknown argument '{sys.argv[2]}'")
+        print("Usage: python main.py \"Your question here\" [--verbose]")
+        exit(1)
+
+# Additional validation for too many arguments
+if len(sys.argv) > 3:
+    print("Error: Too many arguments provided!")
+    print("Usage: python main.py \"Your question here\" [--verbose]")
+    exit(1)
 
 # Create a structured conversation with roles
 messages = [
     types.Content(role="user", parts=[types.Part(text=user_prompt)]),
 ]
 
-print(f"User prompt: {user_prompt}")
-print(f"Message structure: {len(messages)} message(s) in conversation")
-print("-" * 50)
+# Print debug information only if verbose mode is enabled
+if verbose:
+    print(f"User prompt: {user_prompt}")
+    print(f"Message structure: {len(messages)} message(s) in conversation")
+    print("-" * 50)
 
 # Get the API key from environment variables
 api_key = os.environ.get("GEMINI_API_KEY")
@@ -45,14 +64,15 @@ try:
         contents=messages
     )
     
-    # Print the AI response
+    # Print the AI response (always shown)
     print("AI Response:")
     print(response.text)
     print()
     
-    # Print token usage information
-    print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
-    print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
+    # Print token usage information only if verbose mode is enabled
+    if verbose:
+        print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
+        print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
     
 except Exception as e:
     print(f"Error generating content: {e}")
