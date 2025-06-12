@@ -2,6 +2,7 @@ import os
 import sys
 from dotenv import load_dotenv
 from google import genai
+from google.genai import types
 
 # Load environment variables from .env file
 load_dotenv()
@@ -15,7 +16,14 @@ if len(sys.argv) < 2:
 
 # Get the prompt from command line arguments
 user_prompt = sys.argv[1]
+
+# Create a structured conversation with roles
+messages = [
+    types.Content(role="user", parts=[types.Part(text=user_prompt)]),
+]
+
 print(f"User prompt: {user_prompt}")
+print(f"Message structure: {len(messages)} message(s) in conversation")
 print("-" * 50)
 
 # Get the API key from environment variables
@@ -30,11 +38,11 @@ if not api_key:
 # Create a Gemini client
 client = genai.Client(api_key=api_key)
 
-# Generate content using the Gemini model with user's prompt
+# Generate content using the Gemini model with structured conversation
 try:
     response = client.models.generate_content(
         model="gemini-2.0-flash-001",
-        contents=user_prompt
+        contents=messages
     )
     
     # Print the AI response
