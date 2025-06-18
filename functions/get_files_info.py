@@ -40,3 +40,68 @@ schema_get_files_info = types.FunctionDeclaration(
     ),
 )
 
+schema_get_file_content = types.FunctionDeclaration(
+    name="get_file_content",
+    description="Reads and returns the content of a specified file, constrained to the working directory.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description="The path to the file to read, relative to the working directory.",
+            ),
+            "encoding": types.Schema(
+                type=types.Type.STRING,
+                description="The text encoding to use when reading the file. Defaults to 'utf-8' if not specified.",
+            ),
+        },
+        required=["file_path"],
+    ),
+)
+
+schema_run_python_file = types.FunctionDeclaration(
+    name="run_python_file",
+    description="Executes a Python file and returns the output, constrained to the working directory.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description="The path to the Python file to execute, relative to the working directory.",
+            ),
+            "arguments": types.Schema(
+                type=types.Type.ARRAY,
+                description="Command line arguments to pass to the Python script. Each argument should be a string.",
+                items=types.Schema(type=types.Type.STRING),
+            ),
+        },
+        required=["file_path"],
+    ),
+)
+
+schema_write_file = types.FunctionDeclaration(
+    name="write_file",
+    description="Writes content to a specified file, creating or overwriting as needed, constrained to the working directory.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description="The path where the file should be written, relative to the working directory.",
+            ),
+            "content": types.Schema(
+                type=types.Type.STRING,
+                description="The content to write to the file.",
+            ),
+            "mode": types.Schema(
+                type=types.Type.STRING,
+                description="Write mode: 'write' to overwrite existing file, 'append' to add to existing file. Defaults to 'write' if not specified.",
+            ),
+            "encoding": types.Schema(
+                type=types.Type.STRING,
+                description="The text encoding to use when writing the file. Defaults to 'utf-8' if not specified.",
+            ),
+        },
+        required=["file_path", "content"],
+    ),
+)
