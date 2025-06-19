@@ -61,7 +61,7 @@ schema_get_file_content = types.FunctionDeclaration(
 
 schema_run_python_file = types.FunctionDeclaration(
     name="run_python_file",
-    description="Executes a Python file and returns the output, constrained to the working directory.",
+    description="Execute Python files immediately when asked to 'run' them. Test files like tests.py typically need no arguments.",
     parameters=types.Schema(
         type=types.Type.OBJECT,
         properties={
@@ -71,7 +71,7 @@ schema_run_python_file = types.FunctionDeclaration(
             ),
             "arguments": types.Schema(
                 type=types.Type.ARRAY,
-                description="Command line arguments to pass to the Python script. Each argument should be a string.",
+                description="Command line arguments. Optional - most files need none.",
                 items=types.Schema(type=types.Type.STRING),
             ),
         },
